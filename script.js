@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.getElementById('progressBar');
     const status = document.getElementById('status');
     const speedSelect = document.getElementById('speedSelect');
+    const muteBtn = document.getElementById('muteBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
 
     const bgMusic = new Audio('bg.mp3');
     bgMusic.loop = false;
@@ -17,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let isFinished = false;
     let startTime = null;
     let elapsedTime = 0;
+    let isMuted = false;
 
     // Speed settings (in milliseconds for full scroll)
     const speedSettings = {
@@ -62,7 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
         replayBtn.style.display = 'none';
         status.textContent = 'Playing';
 
-        bgMusic.play();
+        if (!isMuted) {
+            bgMusic.volume = 1;
+            bgMusic.play();
+        }
 
         // Start animation
         function animate() {
@@ -136,8 +142,51 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelAnimationFrame(animationId);
         }
     }
-
+    
+    function toggleMute() {
+    isMuted = !isMuted;
+    
+    if (isMuted) {
+        bgMusic.volume = 0;
+        muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        muteBtn.style.backgroundColor = 'rgba(100, 100, 100, 0.7)';
+    } else {
+        bgMusic.volume = 1;
+        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        muteBtn.style.backgroundColor = '';
+    }
+}
+function downloadMessage() {
+    // Get all the message text
+    const messageText = document.getElementById('message').innerText;
+    
+    // Create a blob with the text
+    const blob = new Blob([messageText], { type: 'text/plain' });
+    
+    // Create a download link
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Message_for_you.txt';
+    
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Optional: Show a quick confirmation
+    const originalText = downloadBtn.innerHTML;
+    downloadBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+    downloadBtn.style.backgroundColor = '#4CAF50';
+    
+    setTimeout(() => {
+        downloadBtn.innerHTML = originalText;
+        downloadBtn.style.backgroundColor = '';
+    }, 1500);
+}
     // Event listeners
+    muteBtn.addEventListener('click', toggleMute);
+    downloadBtn.addEventListener('click', downloadMessage);
+    
     playBtn.addEventListener('click', playAnimation);
 
     pauseBtn.addEventListener('click', pauseAnimation);

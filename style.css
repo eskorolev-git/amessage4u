@@ -84,6 +84,16 @@ body {
     gap: 15px;
     margin-bottom: 20px;
 }
+
+/* ====== ADD THIS SECTION ====== */
+.button-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    order: 3; /* Places it after speed control */
+}
+/* ====== END OF NEW SECTION ====== */
+
 /* Mute button - circular icon only */
 .mute-btn {
     width: 50px;
@@ -93,6 +103,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0; /* Prevents button from shrinking */
 }
 
 .mute-btn i {
@@ -103,6 +114,7 @@ body {
 /* Download button */
 .download-btn {
     background-color: rgba(255, 92, 0, 0.85);
+    white-space: nowrap; /* Prevents text from wrapping */
 }
 
 .download-btn:hover {
@@ -150,6 +162,7 @@ body {
     border-radius: 50px;
     border: 2px solid rgba(255, 92, 0, 0.2);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    order: 2; /* Places it after play/pause buttons */
 }
 
 .speed-label {
@@ -186,6 +199,7 @@ body {
     border-radius: 5px;
     overflow: hidden;
     margin: 0 15px;
+    order: 4; /* Places it after button group */
 }
 
 .progress-bar {
@@ -202,6 +216,7 @@ body {
     font-weight: 600;
     min-width: 100px;
     text-align: center;
+    order: 5; /* Places it last */
 }
 
 .instructions {
@@ -217,7 +232,6 @@ body {
     color: #ff9500;
     margin-right: 8px;
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -248,6 +262,12 @@ body {
         gap: 12px;
     }
 
+    .button-group {
+        width: 100%;
+        justify-content: center;
+        order: 3;
+    }
+
     .progress-container {
         width: 100%;
         margin: 5px 0;
@@ -259,15 +279,16 @@ body {
     }
 
     .speed-control {
-        order: 3;
+        order: 2;
         width: 100%;
         justify-content: center;
     }
+
     .mute-btn {
         width: 45px;
         height: 45px;
     }
-    
+
     .download-btn {
         padding: 10px 15px;
         font-size: 0.95rem;
@@ -310,5 +331,10 @@ body {
     .speed-select {
         padding: 5px 10px;
         font-size: 0.9rem;
+    }
+
+    .button-group {
+        flex-wrap: wrap;
+        justify-content: center;
     }
 }

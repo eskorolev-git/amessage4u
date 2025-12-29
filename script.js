@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const status = document.getElementById('status');
     const speedSelect = document.getElementById('speedSelect');
 
-    const bgMusic = new Audio('message4u.mp3');
+    const bgMusic = new Audio('bg.mp3');
     bgMusic.loop = false;
 
     // Animation variables

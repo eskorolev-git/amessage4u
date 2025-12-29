@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Speed settings (in milliseconds for full scroll)
     const speedSettings = {
-        slow: 280000,
+        slow: 290000,
         normal: 90000,
         fast: 40000,
         veryfast: 25000

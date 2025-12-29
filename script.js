@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const status = document.getElementById('status');
     const speedSelect = document.getElementById('speedSelect');
 
+    const bgMusic = new Audio('message4u.mp3');
+    bgMusic.loop = false;
+
     // Animation variables
     let animationId = null;
     let isPlaying = false;
@@ -17,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Speed settings (in milliseconds for full scroll)
     const speedSettings = {
-        slow: 300000,      // 100 seconds
+        slow: 350000,      // 100 seconds
         normal: 90000,    // 90 seconds
         fast: 40000,      // 40 seconds
         veryfast: 25000   // 25 seconds
@@ -58,6 +61,8 @@ document.addEventListener('DOMContentLoaded', function () {
         pauseBtn.style.display = 'flex';
         replayBtn.style.display = 'none';
         status.textContent = 'Playing';
+
+        bgMusic.play();
 
         // Start animation
         function animate() {
@@ -101,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
         pauseBtn.style.display = 'none';
         status.textContent = 'Paused';
 
+        bgMusic.pause();
+
         if (animationId) {
             cancelAnimationFrame(animationId);
         }
@@ -121,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
         pauseBtn.style.display = 'none';
         replayBtn.style.display = 'none';
         status.textContent = 'Paused';
+
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
 
         if (animationId) {
             cancelAnimationFrame(animationId);

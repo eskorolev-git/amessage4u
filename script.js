@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const bgMusic = new Audio('bg.mp3');
     bgMusic.loop = false;
+    bgMusic.volume = 1; // Start at full volume
 
     // Animation variables
     let animationId = null;
@@ -24,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Speed settings (in milliseconds for full scroll)
     const speedSettings = {
         slow: 280000,      // 100 seconds
-        normal: 90000,    // 90 seconds
-        fast: 40000,      // 40 seconds
-        veryfast: 25000   // 25 seconds
+        normal: 90000,     // 90 seconds
+        fast: 40000,       // 40 seconds
+        veryfast: 25000    // 25 seconds
     };
 
     let duration = speedSettings.slow; // Default duration
@@ -65,10 +66,14 @@ document.addEventListener('DOMContentLoaded', function () {
         replayBtn.style.display = 'none';
         status.textContent = 'Playing';
 
+        // Play music if not muted
         if (!isMuted) {
             bgMusic.volume = 1;
-            bgMusic.play();
         }
+        bgMusic.play().catch(e => {
+            console.log("Audio play failed:", e);
+            // Some browsers require user interaction first
+        });
 
         // Start animation
         function animate() {
@@ -112,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
         pauseBtn.style.display = 'none';
         status.textContent = 'Paused';
 
+        // Only pause the music (don't change mute state)
         bgMusic.pause();
 
         if (animationId) {
@@ -135,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
         replayBtn.style.display = 'none';
         status.textContent = 'Paused';
 
+        // Pause and reset music
         bgMusic.pause();
         bgMusic.currentTime = 0;
 
@@ -142,61 +149,64 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelAnimationFrame(animationId);
         }
     }
-    
+
+    // Mute/Unmute function
     function toggleMute() {
-    isMuted = !isMuted;
-    
-    if (isMuted) {
-        bgMusic.volume = 0;
-        muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-        muteBtn.style.backgroundColor = 'rgba(100, 100, 100, 0.7)';
-    } else {
-        bgMusic.volume = 1;
-        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        muteBtn.style.backgroundColor = '';
+        isMuted = !isMuted;
+
+        if (isMuted) {
+            bgMusic.volume = 0;
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            muteBtn.style.backgroundColor = 'rgba(100, 100, 100, 0.7)';
+            muteBtn.title = 'Sound muted - click to unmute';
+        } else {
+            bgMusic.volume = 1;
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            muteBtn.style.backgroundColor = '';
+            muteBtn.title = 'Sound on - click to mute';
+        }
     }
-}
-function downloadMessage() {
-    // Get all the message text
-    const messageText = document.getElementById('message').innerText;
-    
-    // Create a blob with the text
-    const blob = new Blob([messageText], { type: 'text/plain' });
-    
-    // Create a download link
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'Message_for_you.txt';
-    
-    // Trigger download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Optional: Show a quick confirmation
-    const originalText = downloadBtn.innerHTML;
-    downloadBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
-    downloadBtn.style.backgroundColor = '#4CAF50';
-    
-    setTimeout(() => {
-        downloadBtn.innerHTML = originalText;
-        downloadBtn.style.backgroundColor = '';
-    }, 1500);
-}
+
+    // Download function
+    function downloadMessage() {
+        // Get all the message text
+        const messageText = document.getElementById('message').innerText;
+
+        // Create a blob with the text
+        const blob = new Blob([messageText], { type: 'text/plain' });
+
+        // Create a download link
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'Message_for_you.txt';
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Show confirmation
+        const originalText = downloadBtn.innerHTML;
+        const originalBg = downloadBtn.style.backgroundColor;
+        downloadBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+        downloadBtn.style.backgroundColor = '#4CAF50';
+
+        setTimeout(() => {
+            downloadBtn.innerHTML = originalText;
+            downloadBtn.style.backgroundColor = originalBg;
+        }, 1500);
+    }
+
     // Event listeners
-    muteBtn.addEventListener('click', toggleMute);
-    downloadBtn.addEventListener('click', downloadMessage);
-    
     playBtn.addEventListener('click', playAnimation);
-
     pauseBtn.addEventListener('click', pauseAnimation);
-
     replayBtn.addEventListener('click', function () {
         resetAnimation();
         setTimeout(playAnimation, 100);
     });
-
     speedSelect.addEventListener('change', updateDuration);
+    muteBtn.addEventListener('click', toggleMute);
+    downloadBtn.addEventListener('click', downloadMessage);
 
     // Manual scroll control (for touch devices)
     let isDragging = false;

@@ -128,22 +128,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function downloadMessage() {
-        const messageText = document.getElementById('message').innerText;
-        const blob = new Blob([messageText], { type: 'text/plain' });
-
+        // Create a link element
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'Message_for_you.txt';
-
+        
+        // Set the href to point to the PDF file
+        link.href = 'message4u.pdf';
+        
+        // Set the download attribute with the desired filename
+        link.download = 'message4u.pdf';
+        
+        // Append to body, click, and remove
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
+        // Visual feedback for download button
         const originalText = downloadBtn.innerHTML;
         const originalBg = downloadBtn.style.backgroundColor;
         downloadBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
         downloadBtn.style.backgroundColor = '#4CAF50';
 
+        // Reset button after 1.5 seconds
         setTimeout(() => {
             downloadBtn.innerHTML = originalText;
             downloadBtn.style.backgroundColor = originalBg;

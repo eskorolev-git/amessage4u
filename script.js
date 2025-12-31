@@ -29,12 +29,20 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     let duration = speedSettings.slow;
-
-    const containerHeight = document.querySelector('.message-container').offsetHeight;
-    const messageHeight = messageContent.offsetHeight;
-    const maxScroll = messageHeight - containerHeight;
+    let maxScroll = 0;
+    let containerHeight = 0;
+    let messageHeight = 0;
 
     messageContent.style.top = '0px';
+
+    function calculateHeights() {
+        // Recalculate heights to ensure accuracy, especially on mobile
+        containerHeight = document.querySelector('.message-container').offsetHeight;
+        messageHeight = messageContent.offsetHeight;
+        
+        // Add extra padding (50px) to ensure the full message scrolls
+        maxScroll = Math.max(0, messageHeight - containerHeight + 50);
+    }
 
     function updateDuration() {
         const speed = speedSelect.value;
@@ -52,6 +60,9 @@ document.addEventListener('DOMContentLoaded', function () {
             resetAnimation();
         }
 
+        // Recalculate heights before starting animation
+        calculateHeights();
+        
         isPlaying = true;
         startTime = Date.now() - elapsedTime;
 
@@ -163,6 +174,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     speedSelect.addEventListener('change', updateDuration);
     downloadBtn.addEventListener('click', downloadMessage);
+
+    // Initial calculation on load
+    setTimeout(calculateHeights, 100);
+    
+    // Recalculate on window resize (important for mobile orientation changes)
+    window.addEventListener('resize', calculateHeights);
 
     pauseBtn.style.display = 'none';
     replayBtn.style.display = 'none';

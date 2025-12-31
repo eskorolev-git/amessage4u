@@ -7,13 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressBar = document.getElementById('progressBar');
     const status = document.getElementById('status');
     const speedSelect = document.getElementById('speedSelect');
-    const muteBtn = document.getElementById('muteBtn');
     const downloadBtn = document.getElementById('downloadBtn');
 
     const bgMusic = new Audio('bg.mp3');
     bgMusic.loop = false;
     bgMusic.volume = 1;
-    bgMusic.muted = false; // ✅ added
 
     // Animation variables
     let animationId = null;
@@ -21,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let isFinished = false;
     let startTime = null;
     let elapsedTime = 0;
-    let isMuted = false;
 
     // Speed settings (in milliseconds for full scroll)
     const speedSettings = {
@@ -63,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
         replayBtn.style.display = 'none';
         status.textContent = 'Playing';
 
-        // ✅ removed volume override
         bgMusic.play().catch(e => {
             console.log("Audio play failed:", e);
         });
@@ -131,22 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // 🔇 MUTE / UNMUTE
-    function toggleMute() {
-        isMuted = !isMuted;
-        bgMusic.muted = isMuted; // ✅ key fix
-
-        if (isMuted) {
-            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            muteBtn.style.backgroundColor = 'rgba(100, 100, 100, 0.7)';
-            muteBtn.title = 'Sound muted - click to unmute';
-        } else {
-            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-            muteBtn.style.backgroundColor = '';
-            muteBtn.title = 'Sound on - click to mute';
-        }
-    }
-
     function downloadMessage() {
         const messageText = document.getElementById('message').innerText;
         const blob = new Blob([messageText], { type: 'text/plain' });
@@ -177,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(playAnimation, 100);
     });
     speedSelect.addEventListener('change', updateDuration);
-    muteBtn.addEventListener('click', toggleMute);
     downloadBtn.addEventListener('click', downloadMessage);
 
     pauseBtn.style.display = 'none';

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const speedSelect = document.getElementById('speedSelect');
     const downloadBtn = document.getElementById('downloadBtn');
 
-    const bgMusic = new Audio('bg.mp3');
+    const bgMusic = new Audio('bgmusic.mp3');
     bgMusic.loop = false;
     bgMusic.volume = 1;
 
